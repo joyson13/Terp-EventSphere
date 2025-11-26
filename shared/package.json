@@ -1,0 +1,13 @@
+{
+  "name": "@terp-eventsphere/shared",
+  "version": "1.0.0",
+  "description": "Shared utilities and types for Terp EventSphere",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+
