@@ -244,11 +244,16 @@ class EventService {
       throw new Error('User not found');
     }
 
-    // Step 3: Check if user is already registered
+    // Step 3: Check if user is already registered (excluding cancelled)
     const existingRegistration = await registrationRepository.findByParticipantAndEvent(userId, eventId);
     if (existingRegistration) {
       throw new Error('Already registered for this event');
     }
+
+    // Step 3.5: Check if there's a cancelled registration that can be reactivated
+    const cancelledRegistration = await registrationRepository.findAnyByParticipantAndEvent(userId, eventId);
+    const hasCancelledRegistration = cancelledRegistration && 
+      (cancelledRegistration.status === 'cancelled_by_user' || cancelledRegistration.status === 'cancelled_by_event');
 
     // Step 4: Check if user is already on waitlist
     const existingWaitlist = await registrationRepository.findWaitlistEntryByParticipantAndEvent(userId, eventId);
@@ -260,13 +265,24 @@ class EventService {
     const confirmedCount = await registrationRepository.getConfirmedRegistrationCount(eventId);
     const hasCapacity = confirmedCount < event.capacity;
 
-    // Step 6: If capacity available - Create Registration with status 'Confirmed'
+    // Step 6: If capacity available - Create or Reactivate Registration with status 'Confirmed'
     if (hasCapacity) {
-      const registration = await registrationRepository.createRegistration(
-        userId,
-        eventId,
-        'confirmed'
-      );
+      let registration;
+      
+      if (hasCancelledRegistration) {
+        // Reactivate the cancelled registration
+        registration = await registrationRepository.reactivateRegistration(
+          cancelledRegistration.registration_id,
+          'confirmed'
+        );
+      } else {
+        // Create a new registration
+        registration = await registrationRepository.createRegistration(
+          userId,
+          eventId,
+          'confirmed'
+        );
+      }
 
       // Step 7: Trigger confirmation email (FR-14)
       notificationService.notifyRegistrationConfirmation(eventId, event, user, registration)
