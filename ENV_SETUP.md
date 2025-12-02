@@ -18,7 +18,7 @@ If you prefer to set up manually, create `.env` files in the following locations
 
 ### Root Level (`.env`)
 
-Used by docker-compose and shared configurations.
+Used by shared configurations and can be referenced by all services.
 
 ```env
 # Database Configuration

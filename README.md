@@ -12,7 +12,7 @@ This project follows a microservices architecture with the following structure:
   - `event-service`: Event creation and management
   - `registration-service`: Event registrations and waitlist management
 - **Shared**: Common utilities and database configuration
-- **Database**: PostgreSQL with Docker Compose
+- **Database**: PostgreSQL (NeonDB cloud database)
 
 ## Project Structure
 
@@ -37,9 +37,8 @@ Terp-EventSphere/
 │       └── routes/
 ├── shared/                  # Shared utilities
 │   └── db/                 # Database configuration
-├── database/
-│   └── init.sql            # Database schema
-└── docker-compose.yml      # PostgreSQL container setup
+└── database/
+    └── init.sql            # Database schema
 ```
 
 ## Technology Stack
@@ -50,7 +49,6 @@ Terp-EventSphere/
 - **Package Manager**: npm
 - **ORM**: Raw SQL with `pg` library
 - **Password Hashing**: bcrypt
-- **Containerization**: Docker Compose
 
 ## Database Schema
 
@@ -78,8 +76,8 @@ All tables support soft deletes (using `deleted_at` timestamp) and include `crea
 ### Prerequisites
 
 - Node.js (v18 or higher recommended)
-- Docker and Docker Compose
 - npm
+- NeonDB account (or any PostgreSQL database)
 
 ### 1. Install Dependencies
 
@@ -99,13 +97,23 @@ This creates `.env` files for all services with default development values. See 
 
 **Important:** Update `JWT_SECRET` in all `.env` files with a strong random string for production.
 
-### 3. Start PostgreSQL Database
+### 3. Set Up Database
 
-```bash
-docker-compose up -d
-```
+This project uses NeonDB (cloud PostgreSQL). See [NEON_SETUP.md](./NEON_SETUP.md) for detailed setup instructions.
 
-This will start PostgreSQL in a Docker container and automatically initialize the database schema.
+**Quick Setup:**
+1. Create a NeonDB account at [neon.tech](https://neon.tech)
+2. Create a new project and copy your connection string
+3. Update `DATABASE_URL` in all service `.env` files with your NeonDB connection string
+4. Set `DB_SSL=true` in all service `.env` files
+5. Run the database schema initialization:
+   ```bash
+   # Option 1: Using psql (if installed)
+   psql "your-neon-connection-string" -f database/init.sql
+   
+   # Option 2: Using Neon SQL Editor
+   # Copy the contents of database/init.sql and run it in the Neon SQL Editor
+   ```
 
 ### 4. Start Services
 
@@ -273,7 +281,7 @@ See [NEON_SETUP.md](./NEON_SETUP.md) for detailed instructions on configuring Ne
 
 ### Database Migrations
 
-The database schema is initialized via `database/init.sql` when the PostgreSQL container starts. For production, consider using a proper migration system.
+The database schema is initialized via `database/init.sql`. Run this script on your NeonDB database to set up the schema. For production, consider using a proper migration system.
 
 ## License
 
