@@ -135,6 +135,16 @@ class UserController {
       res.status(400).json({ error: error.message });
     }
   }
+
+  // Admin: Get User Stats
+  async getAdminStats(req, res) {
+    try {
+      const stats = await userService.getAdminStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 }
 
 module.exports = new UserController();

@@ -201,6 +201,10 @@ class UserService {
   async deleteUser(userId) {
     return await userRepository.softDelete(userId);
   }
+
+  async getAdminStats() {
+    return await userRepository.getAdminStats();
+  }
 }
 
 module.exports = new UserService();

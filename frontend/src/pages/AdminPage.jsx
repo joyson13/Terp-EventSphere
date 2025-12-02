@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { userService } from '../services/api'
+import { userService, eventService } from '../services/api'
 import api from '../services/api'
 import Spinner from '../components/Spinner'
 import toast from 'react-hot-toast'
@@ -9,6 +9,9 @@ import { FiTrash2, FiSave, FiX } from 'react-icons/fi'
 const AdminPage = () => {
   const { user } = useAuth()
   const [users, setUsers] = useState([])
+  const [loadingStats, setLoadingStats] = useState(true)
+  const [userStats, setUserStats] = useState({ totalUsers: 0, participants: 0, organizers: 0, admins: 0, activeUsers: 0 })
+  const [eventStats, setEventStats] = useState({ totalEvents: 0, published: 0, draft: 0, cancelled: 0, completed: 0, totalSignups: 0, averageRating: 0 })
   const [loading, setLoading] = useState(true)
   const [editingUser, setEditingUser] = useState(null)
   const [selectedRole, setSelectedRole] = useState('')
@@ -16,6 +19,7 @@ const AdminPage = () => {
 
   useEffect(() => {
     fetchUsers()
+    fetchStats()
   }, [])
 
   const fetchUsers = async () => {
@@ -28,6 +32,23 @@ const AdminPage = () => {
       console.error('Error fetching users:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchStats = async () => {
+    setLoadingStats(true)
+    try {
+      const [uRes, eRes] = await Promise.all([
+        userService.getAdminStats(),
+        eventService.getAdminStats(),
+      ])
+      setUserStats(uRes.data)
+      setEventStats(eRes.data)
+    } catch (error) {
+      console.error('Failed to load admin stats:', error)
+      toast.error('Failed to load statistics')
+    } finally {
+      setLoadingStats(false)
     }
   }
 
@@ -73,7 +94,66 @@ const AdminPage = () => {
           <p className="text-gray-600 dark:text-gray-400">User Management</p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+        {/* Overview Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Total Users</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{userStats.totalUsers}</p>
+          </div>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Total Events</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{eventStats.totalEvents}</p>
+          </div>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Event Sign Ups</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{eventStats.totalSignups}</p>
+          </div>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Avg Rating</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{Number(eventStats.averageRating || 0).toFixed(2)}</p>
+          </div>
+        </div>
+
+        {/* User Stats and Quick Actions */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 col-span-2">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">User Statistics</h2>
+              <a href="#users" className="px-3 py-2 bg-maryland-red text-white rounded-md hover:bg-red-700 text-sm">Manage Users</a>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <StatCard label="Admins" value={userStats.admins} />
+              <StatCard label="Organizers" value={userStats.organizers} />
+              <StatCard label="Students" value={userStats.participants} />
+              <StatCard label="Active Users" value={userStats.activeUsers} />
+            </div>
+          </div>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
+            <div className="flex flex-col space-y-3">
+              <a href="/admin" className="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200">User Management</a>
+              <a href="/dashboard" className="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200">Create Event</a>
+              <a href="/" className="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200">Browse Events</a>
+            </div>
+          </div>
+        </div>
+
+        {/* Event Stats */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Event Statistics</h2>
+            <a href="/" className="px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-sm text-gray-800 dark:text-gray-200">View All Events</a>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <StatCard label="Published" value={eventStats.published} />
+            <StatCard label="Draft" value={eventStats.draft} />
+            <StatCard label="Cancelled" value={eventStats.cancelled} />
+            <StatCard label="Completed" value={eventStats.completed} />
+          </div>
+        </div>
+
+        {/* Users Table */}
+        <div id="users" className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
           <div className="p-6">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">All Users</h2>
 
@@ -192,4 +272,12 @@ const AdminPage = () => {
 }
 
 export default AdminPage
+
+// Small stat card component
+const StatCard = ({ label, value }) => (
+  <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+    <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
+    <p className="text-2xl font-semibold text-gray-900 dark:text-white">{value}</p>
+  </div>
+)
 

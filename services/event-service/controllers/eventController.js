@@ -141,6 +141,16 @@ class EventController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  // Admin: Global event statistics
+  async getAdminStats(req, res) {
+    try {
+      const stats = await eventService.getAdminStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 }
 
 module.exports = new EventController();

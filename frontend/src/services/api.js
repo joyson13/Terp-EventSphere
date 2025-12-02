@@ -47,6 +47,7 @@ export const eventService = {
   getParticipantFeedback: (eventId) => api.get(`${EVENT_SERVICE_URL}/api/events/${eventId}/feedback`),
   getEventFeedback: (eventId) => api.get(`${EVENT_SERVICE_URL}/api/events/${eventId}/feedback/organizer`),
   updateFeedback: (id, data) => api.put(`${EVENT_SERVICE_URL}/api/events/feedback/${id}`, data),
+  getAdminStats: () => api.get(`${EVENT_SERVICE_URL}/api/events/admin/stats`),
 }
 
 // User Service API
@@ -57,6 +58,7 @@ export const userService = {
   updateProfile: (data) => api.put(`${USER_SERVICE_URL}/api/users/profile`, data),
   getAllUsers: () => api.get(`${USER_SERVICE_URL}/api/users/admin/users`),
   deleteUser: (id) => api.delete(`${USER_SERVICE_URL}/api/users/admin/users/${id}`),
+  getAdminStats: () => api.get(`${USER_SERVICE_URL}/api/users/admin/stats`),
 }
 
 // Registration Service API

@@ -17,6 +17,7 @@ router.put('/profile', authenticate, userController.updateProfile); // FR-3
 // Admin routes (require authentication + admin role)
 router.get('/admin/users', authenticate, requireAdmin, userController.getAllUsers); // FR-5
 router.delete('/admin/users/:id', authenticate, requireAdmin, userController.deleteUser); // FR-5
+router.get('/admin/stats', authenticate, requireAdmin, userController.getAdminStats);
 
 // Legacy routes (kept for backward compatibility)
 router.get('/:id', userController.getUserById);

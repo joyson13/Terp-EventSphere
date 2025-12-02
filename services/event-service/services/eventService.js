@@ -323,6 +323,12 @@ class EventService {
     // Step 11: If no waitlist - Return "Event is Full" error
     throw new Error('Event is Full');
   }
+
+  async getAdminStats() {
+    // delegate to repository for counts
+    const eventRepository = require('../repositories/eventRepository');
+    return await eventRepository.getAdminStats();
+  }
 }
 
 module.exports = new EventService();

@@ -159,6 +159,39 @@ class EventRepository {
     );
     return result.rows;
   }
+
+  async getAdminStats() {
+    const [totalEventsRes, publishedRes, draftRes, cancelledRes, completedRes] = await Promise.all([
+      query(`SELECT COUNT(*)::int AS count FROM events WHERE deleted_at IS NULL`),
+      query(`SELECT COUNT(*)::int AS count FROM events WHERE status='published' AND deleted_at IS NULL`),
+      query(`SELECT COUNT(*)::int AS count FROM events WHERE status='draft' AND deleted_at IS NULL`),
+      query(`SELECT COUNT(*)::int AS count FROM events WHERE status='cancelled' AND deleted_at IS NULL`),
+      query(`SELECT COUNT(*)::int AS count FROM events WHERE status='completed' AND deleted_at IS NULL`),
+    ]);
+
+    // Total signups: registrations excluding cancelled
+    const signupsRes = await query(
+      `SELECT COUNT(*)::int AS count FROM registrations 
+       WHERE deleted_at IS NULL 
+         AND status NOT IN ('cancelled_by_user','cancelled_by_event','initializing')`
+    );
+
+    // Average rating across all feedback
+    const avgRatingRes = await query(
+      `SELECT COALESCE(ROUND(AVG(rating)::numeric, 2), 0)::float AS avg
+       FROM event_feedback WHERE deleted_at IS NULL`
+    );
+
+    return {
+      totalEvents: totalEventsRes.rows[0]?.count || 0,
+      published: publishedRes.rows[0]?.count || 0,
+      draft: draftRes.rows[0]?.count || 0,
+      cancelled: cancelledRes.rows[0]?.count || 0,
+      completed: completedRes.rows[0]?.count || 0,
+      totalSignups: signupsRes.rows[0]?.count || 0,
+      averageRating: avgRatingRes.rows[0]?.avg || 0,
+    };
+  }
 }
 
 module.exports = new EventRepository();

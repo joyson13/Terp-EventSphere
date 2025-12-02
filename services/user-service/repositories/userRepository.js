@@ -192,6 +192,34 @@ class UserRepository {
       [token]
     );
   }
+
+  async getAdminStats() {
+    // Total and role counts
+    const [totalUsersRes, participantsRes, organizersRes, adminsRes] = await Promise.all([
+      query(`SELECT COUNT(*)::int AS count FROM users WHERE deleted_at IS NULL`),
+      query(`SELECT COUNT(*)::int AS count FROM users WHERE role = 'participant' AND deleted_at IS NULL`),
+      query(`SELECT COUNT(*)::int AS count FROM users WHERE role = 'event_organizer' AND deleted_at IS NULL`),
+      query(`SELECT COUNT(*)::int AS count FROM users WHERE role = 'administrator' AND deleted_at IS NULL`),
+    ]);
+
+    // Active users: participants with at least one non-cancelled registration
+    const activeUsersRes = await query(
+      `SELECT COUNT(DISTINCT p.user_id)::int AS count
+       FROM participants p
+       JOIN registrations r ON r.participant_id = p.user_id
+       WHERE p.deleted_at IS NULL
+         AND r.deleted_at IS NULL
+         AND r.status NOT IN ('cancelled_by_user','cancelled_by_event','initializing')`
+    );
+
+    return {
+      totalUsers: totalUsersRes.rows[0]?.count || 0,
+      participants: participantsRes.rows[0]?.count || 0,
+      organizers: organizersRes.rows[0]?.count || 0,
+      admins: adminsRes.rows[0]?.count || 0,
+      activeUsers: activeUsersRes.rows[0]?.count || 0,
+    };
+  }
 }
 
 module.exports = new UserRepository();

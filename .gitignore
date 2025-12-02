@@ -32,3 +32,4 @@ build/
 
 # Docker
 docker-compose.override.yml
+WARP.md

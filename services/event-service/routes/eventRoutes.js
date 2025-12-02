@@ -4,6 +4,10 @@ const eventController = require('../controllers/eventController');
 const feedbackController = require('../controllers/feedbackController');
 const { authenticate } = require('../middleware/authMiddleware');
 const { requireEventOrganizer } = require('../middleware/organizerMiddleware');
+const { requireAdmin } = require('../middleware/adminMiddleware');
+
+// Admin statistics route (place BEFORE any ":id" routes)
+router.get('/admin/stats', authenticate, requireAdmin, eventController.getAdminStats.bind(eventController));
 
 // Public routes
 router.get('/', eventController.getAllEvents);
