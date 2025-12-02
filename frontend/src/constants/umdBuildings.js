@@ -25,8 +25,6 @@ export const UMD_BUILDINGS = [
   'Maryland Stadium',
   'Memorial Chapel',
   'Adele H. Stamp Student Union',
-  'Hornbake Library',
-  'McKeldin Library',
   'Health Sciences Library',
   'Architecture Building',
   'School of Public Health',
