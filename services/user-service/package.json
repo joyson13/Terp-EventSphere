@@ -13,10 +13,19 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+<<<<<<< HEAD
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "helmet": "^7.1.0",
+=======
+<<<<<<< HEAD
+=======
+    "cors": "^2.8.5",
+>>>>>>> feature8-attendee-networking
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.3",
     "uuid": "^9.0.1"

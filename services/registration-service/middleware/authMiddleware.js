@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const jwt = require('jsonwebtoken');
 const { query } = require('../../../shared/db/config');
 
@@ -56,7 +57,18 @@ const authenticate = async (req, res, next) => {
     return res.status(500).json({ error: 'Authentication error: ' + error.message });
   }
 };
+=======
+/**
+ * Authentication middleware for registration-service
+ * Imports from user-service middleware
+ */
+const { authenticate } = require('../../user-service/middleware/authMiddleware');
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
 
 module.exports = {
   authenticate,
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d

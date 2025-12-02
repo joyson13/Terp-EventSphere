@@ -1,10 +1,16 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+<<<<<<< HEAD
 const helmet = require('helmet');
 const http = require('http');
 const { Server } = require('socket.io');
 const { initDatabase, getPool } = require('../../shared/db/config');
+=======
+const http = require('http');
+const { Server } = require('socket.io');
+const { initDatabase } = require('../../shared/db/config');
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
 
 const app = express();
 const server = http.createServer(app);
@@ -18,6 +24,7 @@ const io = new Server(server, {
 
 const PORT = process.env.PORT || 3004;
 
+<<<<<<< HEAD
 // Initialize database
 initDatabase();
 
@@ -30,6 +37,20 @@ app.use(
     credentials: true,
   })
 );
+=======
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Initialize database
+initDatabase({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+});
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
 
 // Store user socket connections
 const userSockets = new Map();
@@ -74,6 +95,7 @@ io.on('connection', (socket) => {
 app.set('io', io);
 
 // Routes
+<<<<<<< HEAD
 app.get('/health', async (req, res) => {
   try {
     // Ping database to ensure connection is healthy
@@ -83,6 +105,10 @@ app.get('/health', async (req, res) => {
   } catch (err) {
     res.status(500).json({ status: 'error', error: err.message });
   }
+=======
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', service: 'notification-service' });
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
 });
 
 // Import routes

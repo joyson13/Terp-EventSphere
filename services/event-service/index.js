@@ -1,13 +1,18 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+<<<<<<< HEAD
 const helmet = require('helmet');
 const { initDatabase, getPool } = require('../../shared/db/config');
+=======
+const { initDatabase } = require('../../shared/db/config');
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
 const eventService = require('./services/eventService');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
 
+<<<<<<< HEAD
 // Initialize database
 initDatabase();
 
@@ -31,6 +36,24 @@ app.get('/health', async (req, res) => {
   } catch (err) {
     res.status(500).json({ status: 'error', error: err.message });
   }
+=======
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Initialize database
+initDatabase({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+});
+
+// Routes
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', service: 'event-service' });
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
 });
 
 // Archive past events endpoint (for manual trigger or scheduled job)

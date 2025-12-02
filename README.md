@@ -6,7 +6,15 @@ A microservices-based event management system with React frontend, Node.js/Expre
 
 This project follows a microservices architecture with the following structure:
 
+<<<<<<< HEAD
 - **Frontend**: React application
+=======
+<<<<<<< HEAD
+- **Frontend**: React application (to be implemented)
+=======
+- **Frontend**: React application
+>>>>>>> feature8-attendee-networking
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
 - **Backend Services**: 
   - `user-service`: User management (Participants, Event Organizers, Administrators)
   - `event-service`: Event creation and management
@@ -18,7 +26,15 @@ This project follows a microservices architecture with the following structure:
 
 ```
 Terp-EventSphere/
+<<<<<<< HEAD
 ├── frontend/                 # React frontend
+=======
+<<<<<<< HEAD
+├── frontend/                 # React frontend (to be implemented)
+=======
+├── frontend/                 # React frontend
+>>>>>>> feature8-attendee-networking
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
 ├── services/
 │   ├── user-service/        # User management service
 │   │   ├── controllers/     # API request handlers
@@ -89,6 +105,7 @@ npm install
 
 This will install dependencies for all workspaces (root, services, shared, frontend).
 
+<<<<<<< HEAD
 ### 2. Set Up Environment Variables
 
 ```bash
@@ -100,6 +117,9 @@ This creates `.env` files for all services with default development values. See 
 **Important:** Update `JWT_SECRET` in all `.env` files with a strong random string for production.
 
 ### 3. Start PostgreSQL Database
+=======
+### 2. Start PostgreSQL Database
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
 
 ```bash
 docker-compose up -d
@@ -107,7 +127,32 @@ docker-compose up -d
 
 This will start PostgreSQL in a Docker container and automatically initialize the database schema.
 
+<<<<<<< HEAD
 ### 4. Start Services
+=======
+<<<<<<< HEAD
+### 3. Configure Environment Variables
+
+Copy the `.env.example` files in each service directory to `.env`:
+
+```bash
+# User Service
+cp services/user-service/.env.example services/user-service/.env
+
+# Event Service
+cp services/event-service/.env.example services/event-service/.env
+
+# Registration Service
+cp services/registration-service/.env.example services/registration-service/.env
+```
+
+Update the `.env` files with your database credentials if needed.
+
+### 4. Start Services
+=======
+### 3. Start Services
+>>>>>>> feature8-attendee-networking
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
 
 Each service can be started independently:
 
@@ -233,6 +278,7 @@ router.delete('/admin/users/:id', authenticate, requireAdmin, controller.deleteU
 
 ### Environment Variables
 
+<<<<<<< HEAD
 Environment variables are required for all services. See [ENV_SETUP.md](./ENV_SETUP.md) for detailed setup instructions.
 
 **Quick Setup:**
@@ -256,6 +302,11 @@ This will create `.env` files for all services with default development values.
 
 **Using Neon Database:**
 See [NEON_SETUP.md](./NEON_SETUP.md) for detailed instructions on configuring Neon PostgreSQL database.
+=======
+Make sure to set the following in your `.env` file:
+- `JWT_SECRET` - Secret key for signing JWT tokens (use a strong random string)
+- `JWT_EXPIRES_IN` - Token expiration time (default: '24h')
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
 
 ## Development
 

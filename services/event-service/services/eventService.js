@@ -244,12 +244,24 @@ class EventService {
       throw new Error('User not found');
     }
 
+<<<<<<< HEAD
     // Step 3: Check if user is already registered
+=======
+    // Step 3: Check if user is already registered (excluding cancelled)
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
     const existingRegistration = await registrationRepository.findByParticipantAndEvent(userId, eventId);
     if (existingRegistration) {
       throw new Error('Already registered for this event');
     }
 
+<<<<<<< HEAD
+=======
+    // Step 3.5: Check if there's a cancelled registration that can be reactivated
+    const cancelledRegistration = await registrationRepository.findAnyByParticipantAndEvent(userId, eventId);
+    const hasCancelledRegistration = cancelledRegistration && 
+      (cancelledRegistration.status === 'cancelled_by_user' || cancelledRegistration.status === 'cancelled_by_event');
+
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
     // Step 4: Check if user is already on waitlist
     const existingWaitlist = await registrationRepository.findWaitlistEntryByParticipantAndEvent(userId, eventId);
     if (existingWaitlist) {
@@ -260,6 +272,7 @@ class EventService {
     const confirmedCount = await registrationRepository.getConfirmedRegistrationCount(eventId);
     const hasCapacity = confirmedCount < event.capacity;
 
+<<<<<<< HEAD
     // Step 6: If capacity available - Create Registration with status 'Confirmed'
     if (hasCapacity) {
       const registration = await registrationRepository.createRegistration(
@@ -267,6 +280,26 @@ class EventService {
         eventId,
         'confirmed'
       );
+=======
+    // Step 6: If capacity available - Create or Reactivate Registration with status 'Confirmed'
+    if (hasCapacity) {
+      let registration;
+      
+      if (hasCancelledRegistration) {
+        // Reactivate the cancelled registration
+        registration = await registrationRepository.reactivateRegistration(
+          cancelledRegistration.registration_id,
+          'confirmed'
+        );
+      } else {
+        // Create a new registration
+        registration = await registrationRepository.createRegistration(
+          userId,
+          eventId,
+          'confirmed'
+        );
+      }
+>>>>>>> 0a145dac583f605661b91a0e90e2c4e5c290222d
 
       // Step 7: Trigger confirmation email (FR-14)
       notificationService.notifyRegistrationConfirmation(eventId, event, user, registration)

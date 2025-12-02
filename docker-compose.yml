@@ -25,20 +25,28 @@ services:
     container_name: terp-eventsphere-app
     ports:
       - "5173:5173"
+<<<<<<< HEAD
+=======
+      - "3001:3001"
+      - "3002:3002"
+      - "3003:3003"
+      - "3004:3004"
+>>>>>>> feature8-attendee-networking
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql://eventsphere:eventsphere123@postgres:5432/eventsphere}
-      DB_SSL: ${DB_SSL:-true}
-      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-key-change-in-production-min-32-chars}
-      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173,http://localhost:3000}
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
-      NOTIFICATION_SERVICE_URL: ${NOTIFICATION_SERVICE_URL:-http://localhost:3004}
-      REGISTRATION_SERVICE_URL: ${REGISTRATION_SERVICE_URL:-http://localhost:3003}
-    env_file:
-      - .env
+      DATABASE_URL: postgresql://${DB_USER:-eventsphere}:${DB_PASSWORD:-eventsphere123}@postgres:5432/${DB_NAME:-eventsphere}
+<<<<<<< HEAD
+      # Add any other environment variables your app needs
+=======
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-eventsphere}
+      DB_USER: ${DB_USER:-eventsphere}
+      DB_PASSWORD: ${DB_PASSWORD:-eventsphere123}
+      NODE_ENV: development
+>>>>>>> feature8-attendee-networking
     volumes:
       - .:/app
       - /app/node_modules

@@ -10,8 +10,12 @@
   ],
   "scripts": {
     "install:all": "npm install",
+<<<<<<< HEAD
+    "dev": "npm run dev --workspaces",
+=======
     "dev": "concurrently -n \"USER,EVENT,REG,NOTIF,FRONTEND\" -c \"blue,green,yellow,cyan,magenta\" \"npm run dev --workspace=@terp-eventsphere/user-service\" \"npm run dev --workspace=@terp-eventsphere/event-service\" \"npm run dev --workspace=@terp-eventsphere/registration-service\" \"npm run dev --workspace=@terp-eventsphere/notification-service\" \"npm run dev --workspace=@terp-eventsphere/frontend\"",
     "dev:services": "concurrently -n \"USER,EVENT,REG,NOTIF\" -c \"blue,green,yellow,cyan\" \"npm run dev --workspace=@terp-eventsphere/user-service\" \"npm run dev --workspace=@terp-eventsphere/event-service\" \"npm run dev --workspace=@terp-eventsphere/registration-service\" \"npm run dev --workspace=@terp-eventsphere/notification-service\"",
+>>>>>>> feature8-attendee-networking
     "build": "npm run build --workspaces"
   },
   "keywords": [
@@ -21,9 +25,13 @@
     "react"
   ],
   "author": "",
+<<<<<<< HEAD
+  "license": "ISC"
+=======
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^8.2.2"
   }
+>>>>>>> feature8-attendee-networking
 }
 
