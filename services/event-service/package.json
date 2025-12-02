@@ -1,0 +1,30 @@
+{
+  "name": "@terp-eventsphere/event-service",
+  "version": "1.0.0",
+  "description": "Event Service for Terp EventSphere",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "start": "node index.js",
+    "test": "mocha test/**/*.test.js --timeout 10000",
+    "test:watch": "mocha test/**/*.test.js --watch --timeout 10000"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "helmet": "^7.1.0",
+    "pg": "^8.11.3",
+    "qrcode": "^1.5.4",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
+    "sinon": "^17.0.1"
+  }
+}
