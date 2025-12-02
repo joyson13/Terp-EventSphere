@@ -26,6 +26,69 @@ class RegistrationRepository {
   }
 
   /**
+   * Find any registration by participant and event (including cancelled)
+   * Used to check for existing registrations that can be reactivated
+   * @param {string} participantId - Participant ID
+   * @param {string} eventId - Event ID
+   */
+  async findAnyByParticipantAndEvent(participantId, eventId) {
+    const result = await query(
+      `SELECT registration_id, participant_id, event_id, status, qr_code_data, created_at, updated_at
+       FROM registrations
+       WHERE participant_id = $1 AND event_id = $2 AND deleted_at IS NULL`,
+      [participantId, eventId]
+    );
+    return result.rows[0] || null;
+  }
+
+  /**
+   * Reactivate a cancelled registration by updating its status and regenerating QR code
+   * @param {string} registrationId - Registration ID
+   * @param {string} status - New status (usually 'confirmed')
+   * @returns {Object} - Updated registration
+   */
+  async reactivateRegistration(registrationId, status) {
+    // First get the existing registration to generate QR code with correct IDs
+    const existing = await query(
+      `SELECT registration_id, participant_id, event_id FROM registrations WHERE registration_id = $1 AND deleted_at IS NULL`,
+      [registrationId]
+    );
+
+    if (existing.rows.length === 0) {
+      throw new Error('Registration not found');
+    }
+
+    const { registration_id, participant_id, event_id } = existing.rows[0];
+    
+    // Generate QR code data using the existing registration_id
+    const qrData = JSON.stringify({
+      registrationId: registration_id,
+      participantId: participant_id,
+      eventId: event_id,
+      timestamp: new Date().toISOString()
+    });
+
+    // Generate QR code image (base64)
+    let qrCodeData = null;
+    try {
+      qrCodeData = await QRCode.toDataURL(qrData);
+    } catch (err) {
+      console.error('Error generating QR code:', err);
+      // Continue without QR code if generation fails
+    }
+
+    const result = await query(
+      `UPDATE registrations 
+       SET status = $1, qr_code_data = $2, updated_at = CURRENT_TIMESTAMP
+       WHERE registration_id = $3 AND deleted_at IS NULL
+       RETURNING registration_id, participant_id, event_id, status, qr_code_data, created_at, updated_at`,
+      [status, qrCodeData, registrationId]
+    );
+
+    return result.rows[0] || null;
+  }
+
+  /**
    * Get count of confirmed registrations for an event
    * @param {string} eventId - Event ID
    */

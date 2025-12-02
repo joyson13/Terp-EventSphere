@@ -27,7 +27,10 @@ const RegistrationButton = ({ event, onRegistrationChange }) => {
       const response = await registrationService.getParticipantRegistrations(user.userID)
       // Filter out cancelled registrations
       const registration = response.data.find(
-        (reg) => reg.event_id === event.event_id && reg.status !== 'cancelled_by_user' && reg.status !== 'cancelled'
+        (reg) => reg.event_id === event.event_id && 
+        reg.status !== 'cancelled_by_user' && 
+        reg.status !== 'cancelled_by_event' &&
+        reg.status !== 'cancelled'
       )
 
       if (registration) {
@@ -61,14 +64,15 @@ const RegistrationButton = ({ event, onRegistrationChange }) => {
         toast.success('Registration confirmed!')
         // Refresh registration status to ensure UI is up to date
         await checkRegistrationStatus()
+        // Call the callback to refresh parent component state
         if (onRegistrationChange) {
-          onRegistrationChange()
+          await onRegistrationChange()
         }
       } else if (response.data.status === 'waitlisted') {
         toast.success(`You are on the waitlist! Position: ${response.data.position}`)
         setRegistrationStatus({ type: 'waitlisted', position: response.data.position })
         if (onRegistrationChange) {
-          onRegistrationChange()
+          await onRegistrationChange()
         }
       }
     } catch (error) {
