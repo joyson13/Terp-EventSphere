@@ -70,6 +70,8 @@ const NotificationDropdown = () => {
         return '📢'
       case 'registration_cancelled':
         return '🚫'
+      case 'check_in_success':
+        return '🎟️'
       default:
         return '🔔'
     }

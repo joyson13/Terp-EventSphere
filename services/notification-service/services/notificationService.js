@@ -17,7 +17,8 @@ class NotificationService {
       'event_cancelled',
       'event_updated',
       'event_published',
-      'registration_cancelled'
+      'registration_cancelled',
+      'check_in_success'
     ];
 
     if (!validTypes.includes(notificationData.type)) {

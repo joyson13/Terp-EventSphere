@@ -55,7 +55,24 @@ class RegistrationService {
       throw new Error('Already registered for this event');
     }
 
-    return await registrationRepository.create(registrationData);
+    const registration = await registrationRepository.create(registrationData);
+
+    // Get event details for notification
+    const eventDetails = await query(
+      `SELECT event_title FROM events WHERE event_id = $1`,
+      [registrationData.eventId]
+    );
+
+    // Create notification for participant
+    await notificationClient.createNotification({
+      user_id: registrationData.participantId,
+      type: 'registration_confirmed',
+      title: 'Registration Confirmed',
+      message: `You have successfully registered for "${eventDetails.rows[0]?.event_title || 'the event'}".`,
+      event_id: registrationData.eventId
+    }).catch(err => console.error('Failed to create notification:', err));
+
+    return registration;
   }
 
   async updateRegistration(registrationId, registrationData) {
@@ -157,6 +174,15 @@ class RegistrationService {
     // Trigger passport service to add badge (FR-19)
     // Fire and forget - async, non-blocking
     passportClient.notifyCheckIn(registration.participant_id, registration.event_id);
+
+    // Create notification for participant
+    await notificationClient.createNotification({
+      user_id: registration.participant_id,
+      type: 'check_in_success',
+      title: 'Check-in Successful',
+      message: `You have successfully checked in to "${registration.event_title}".`,
+      event_id: registration.event_id
+    }).catch(err => console.error('Failed to create notification:', err));
 
     return {
       ...updatedRegistration,
