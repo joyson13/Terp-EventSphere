@@ -6,12 +6,11 @@ class FeedbackController {
    */
   async createFeedback(req, res) {
     try {
-      const { eventId } = req.params; // Get event_id from route params
-      const { rating, comment } = req.body;
+      const { event_id, rating, comment } = req.body;
       const participantId = req.user.userID;
 
       const feedback = await feedbackService.createFeedback({
-        event_id: eventId,
+        event_id,
         participant_id: participantId,
         rating,
         comment

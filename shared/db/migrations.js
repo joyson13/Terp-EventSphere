@@ -31,7 +31,7 @@ async function runMigrations() {
 
     // Read and execute init.sql schema
     // Note: In production, you'd want to read actual migration files
-    // For now, we'll assume the schema is created via docker-compose init.sql
+    // The schema should be initialized manually using database/init.sql on your database
     
     await client.query('COMMIT');
     console.log('Migrations completed successfully');

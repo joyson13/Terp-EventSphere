@@ -4,20 +4,21 @@ let pool = null;
 
 /**
  * Initialize database connection pool
- * @param {Object} config - Database configuration
+ * Uses DATABASE_URL environment variable for connection string
  */
-function initDatabase(config) {
+function initDatabase() {
   if (pool) {
     return pool;
   }
 
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL environment variable is required');
+  }
+
   pool = new Pool({
-    host: config.host || process.env.DB_HOST || 'localhost',
-    port: config.port || process.env.DB_PORT || 5432,
-    database: config.database || process.env.DB_NAME || 'eventsphere',
-    user: config.user || process.env.DB_USER || 'eventsphere',
-    password: config.password || process.env.DB_PASSWORD || 'eventsphere123',
-    max: config.max || 20,
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+    max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
   });

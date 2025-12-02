@@ -52,10 +52,7 @@ const EventDetailPage = () => {
     try {
       const response = await registrationService.getParticipantRegistrations(user.userID)
       const registration = response.data.find(
-        (reg) => reg.event_id === id && 
-        reg.status !== 'cancelled_by_user' && 
-        reg.status !== 'cancelled_by_event' &&
-        reg.status !== 'cancelled'
+        (reg) => reg.event_id === id && reg.status !== 'cancelled_by_user' && reg.status !== 'cancelled'
       )
       setUserRegistration(registration || null)
     } catch (error) {

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const { query } = require('../../../shared/db/config');
 
 /**
- * Authentication middleware for registration-service
+ * Authentication middleware for notification-service
  * Verifies JWT token from Authorization header and attaches user to request
  */
 const authenticate = async (req, res, next) => {
@@ -60,3 +60,4 @@ const authenticate = async (req, res, next) => {
 module.exports = {
   authenticate,
 };
+

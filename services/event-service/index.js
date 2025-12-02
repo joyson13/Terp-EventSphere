@@ -1,28 +1,36 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { initDatabase } = require('../../shared/db/config');
+const helmet = require('helmet');
+const { initDatabase, getPool } = require('../../shared/db/config');
 const eventService = require('./services/eventService');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-
 // Initialize database
-initDatabase({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-});
+initDatabase();
+
+// Middleware
+app.use(helmet());
+app.use(express.json());
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN?.split(',') || '*',
+    credentials: true,
+  })
+);
 
 // Routes
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', service: 'event-service' });
+app.get('/health', async (req, res) => {
+  try {
+    // Ping database to ensure connection is healthy
+    const pool = getPool();
+    await pool.query('SELECT 1');
+    res.status(200).json({ status: 'ok', service: 'event-service' });
+  } catch (err) {
+    res.status(500).json({ status: 'error', error: err.message });
+  }
 });
 
 // Archive past events endpoint (for manual trigger or scheduled job)

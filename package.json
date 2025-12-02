@@ -11,6 +11,7 @@
   "scripts": {
     "install:all": "npm install",
     "dev": "concurrently -n \"USER,EVENT,REG,NOTIF,FRONTEND\" -c \"blue,green,yellow,cyan,magenta\" \"npm run dev --workspace=@terp-eventsphere/user-service\" \"npm run dev --workspace=@terp-eventsphere/event-service\" \"npm run dev --workspace=@terp-eventsphere/registration-service\" \"npm run dev --workspace=@terp-eventsphere/notification-service\" \"npm run dev --workspace=@terp-eventsphere/frontend\"",
+    "start": "concurrently -n \"USER,EVENT,REG,NOTIF,FRONTEND\" -c \"blue,green,yellow,cyan,magenta\" \"npm run start --workspace=@terp-eventsphere/user-service\" \"npm run start --workspace=@terp-eventsphere/event-service\" \"npm run start --workspace=@terp-eventsphere/registration-service\" \"npm run start --workspace=@terp-eventsphere/notification-service\" \"npm run dev --workspace=@terp-eventsphere/frontend\"",
     "dev:services": "concurrently -n \"USER,EVENT,REG,NOTIF\" -c \"blue,green,yellow,cyan\" \"npm run dev --workspace=@terp-eventsphere/user-service\" \"npm run dev --workspace=@terp-eventsphere/event-service\" \"npm run dev --workspace=@terp-eventsphere/registration-service\" \"npm run dev --workspace=@terp-eventsphere/notification-service\"",
     "build": "npm run build --workspaces"
   },
@@ -22,7 +23,7 @@
   ],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "concurrently": "^8.2.2"
   }
 }
