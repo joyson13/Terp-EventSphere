@@ -6,7 +6,11 @@ A microservices-based event management system with React frontend, Node.js/Expre
 
 This project follows a microservices architecture with the following structure:
 
+<<<<<<< HEAD
 - **Frontend**: React application (to be implemented)
+=======
+- **Frontend**: React application
+>>>>>>> feature8-attendee-networking
 - **Backend Services**: 
   - `user-service`: User management (Participants, Event Organizers, Administrators)
   - `event-service`: Event creation and management
@@ -18,7 +22,11 @@ This project follows a microservices architecture with the following structure:
 
 ```
 Terp-EventSphere/
+<<<<<<< HEAD
 ├── frontend/                 # React frontend (to be implemented)
+=======
+├── frontend/                 # React frontend
+>>>>>>> feature8-attendee-networking
 ├── services/
 │   ├── user-service/        # User management service
 │   │   ├── controllers/     # API request handlers
@@ -97,6 +105,7 @@ docker-compose up -d
 
 This will start PostgreSQL in a Docker container and automatically initialize the database schema.
 
+<<<<<<< HEAD
 ### 3. Configure Environment Variables
 
 Copy the `.env.example` files in each service directory to `.env`:
@@ -115,6 +124,9 @@ cp services/registration-service/.env.example services/registration-service/.env
 Update the `.env` files with your database credentials if needed.
 
 ### 4. Start Services
+=======
+### 3. Start Services
+>>>>>>> feature8-attendee-networking
 
 Each service can be started independently:
 
